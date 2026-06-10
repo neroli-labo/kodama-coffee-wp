@@ -1,0 +1,1716 @@
+/*!
+Theme Name: KODAMA COFFEE
+Description: 木霊珈琲オリジナルテーマ。スタイルの実体は sass/ 配下のSCSSで管理し、本ファイルへ手動コンパイル（結合）する。
+Version: 1.0.0
+Author: Cape Light
+Text Domain: kodama-coffee
+*/
+
+/* =============================================
+   foundation/_reset.scss
+============================================= */
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+/* =============================================
+   foundation/_variables.scss
+============================================= */
+:root {
+  --forest:      #2D4A35;
+  --forest-deep: #223629;
+  --forest-mid:  #3D6145;
+  --cream:       #FAF5EA;
+  --cream-dim:   #EDE5CE;
+  --gold:        #D9B55A;
+  --gold-pale:   #E8C97A;
+  --ink:         #1C1C1C;
+  --moss:        #6B8F5E;
+  --mist:        rgba(250,245,234,0.06);
+}
+
+/* =============================================
+   foundation/_base.scss
+============================================= */
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--forest-deep);
+  color: var(--cream);
+  font-family: 'Lato', 'Noto Serif JP', sans-serif;
+  font-weight: 300;
+  line-height: 1.8;
+  overflow-x: hidden;
+}
+
+img { display: block; width: 100%; height: auto; }
+
+body.nav-open { overflow: hidden; }
+
+@keyframes fade-up {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+@keyframes fade-in {
+  from { opacity: 0; }
+  to   { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+  .gallery-track { animation: none; }
+}
+
+/* =============================================
+   layout/_header.scss
+============================================= */
+.site-nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  padding: 1.5rem 3rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.5s, padding 0.4s;
+}
+.site-nav.scrolled {
+  background: rgba(26,46,31,0.92);
+  backdrop-filter: blur(12px);
+  padding: 1rem 3rem;
+  border-bottom: 1px solid rgba(212,168,83,0.15);
+}
+.nav-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 1.1rem;
+  letter-spacing: 0.3em;
+  color: var(--cream);
+  text-decoration: none;
+}
+.nav-links {
+  list-style: none;
+  display: flex;
+  gap: 2.2rem;
+}
+.nav-links a {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.2em;
+  color: rgba(245,239,224,0.88);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.nav-links a:hover { color: var(--gold); }
+.nav-links .current-menu-item a,
+.nav-links .current_page_item a { color: var(--gold); }
+
+.nav-toggle {
+  display: none;
+  background: none;
+  border: 1px solid rgba(212,168,83,0.3);
+  color: var(--cream);
+  padding: 0.4rem 0.75rem;
+  cursor: pointer;
+  font-size: 1.1rem;
+  line-height: 1;
+  transition: border-color 0.3s;
+  position: relative;
+  z-index: 101;
+}
+.nav-toggle.open { border-color: rgba(212,168,83,0.7); }
+
+@media (max-width: 900px) {
+  .site-nav { padding: 1.2rem 1.5rem; }
+  .site-nav.scrolled { padding: 0.8rem 1.5rem; }
+  .nav-toggle { display: block; }
+  .nav-links {
+    display: none;
+    position: fixed;
+    inset: 0;
+    height: 100vh;
+    background: rgba(20,38,25,0.97);
+    backdrop-filter: blur(20px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0;
+    z-index: 100;
+  }
+  .nav-links.open { display: flex; }
+  .nav-links li a {
+    padding: 1.1rem 3rem;
+    display: block;
+    font-size: 1.1rem;
+    letter-spacing: 0.35em;
+    color: rgba(245,239,224,0.85);
+    text-align: center;
+  }
+  .nav-links li a:hover { color: var(--gold); }
+}
+
+/* =============================================
+   layout/_footer.scss
+============================================= */
+.site-footer {
+  position: relative;
+  overflow: hidden;
+  padding: 6rem 0 6rem;
+  text-align: center;
+}
+
+.footer-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url('/kodama-coffee-wp/wp-content/themes/kodama-coffee/images/footer.jpg');
+  background-size: cover;
+  background-position: center 40%;
+  transform: scale(1.04);
+}
+
+.footer-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 55%, rgba(34,54,41,0.25) 0%, transparent 80%),
+    linear-gradient(180deg,
+      rgba(34,54,41,0.52) 0%,
+      rgba(34,54,41,0.22) 45%,
+      rgba(34,54,41,0.62) 100%);
+}
+
+.site-footer::before {
+  content: '';
+  position: absolute;
+  top: 0; left: -30%; right: -30%;
+  height: 1px;
+  z-index: 2;
+  background: linear-gradient(90deg,
+    transparent 0%,
+    rgba(232,201,122,0.5) 30%,
+    rgba(250,245,234,0.9) 50%,
+    rgba(232,201,122,0.5) 70%,
+    transparent 100%);
+  animation: footer-shimmer 10s ease-in-out infinite;
+}
+@keyframes footer-shimmer {
+  0%   { transform: translateX(-30%); opacity: 0.4; }
+  50%  { transform: translateX(0%);   opacity: 1;   }
+  100% { transform: translateX(30%);  opacity: 0.4; }
+}
+
+.site-footer > *:not(.footer-bg):not(.footer-overlay) {
+  position: relative;
+  z-index: 2;
+}
+
+.footer-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 2rem;
+  letter-spacing: 0.2em;
+  color: var(--cream);
+  margin-bottom: 0.4rem;
+}
+.footer-catch {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.8rem;
+  letter-spacing: 0.4em;
+  color: rgba(250,245,234,0.92);
+  text-shadow: 0 1px 8px rgba(34,54,41,0.6);
+  margin-bottom: 2.5rem;
+}
+.footer-nav {
+  list-style: none;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 1.8rem;
+  margin-bottom: 2.5rem;
+}
+.footer-nav a {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.25em;
+  color: rgba(245,239,224,0.75);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.footer-nav a:hover { color: var(--gold); }
+.footer-sns {
+  display: flex;
+  justify-content: center;
+  gap: 1.8rem;
+  margin-bottom: 2.5rem;
+}
+.footer-sns a {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px; height: 40px;
+  border: 1px solid rgba(212,168,83,0.2);
+  border-radius: 50%;
+  color: rgba(245,239,224,0.70);
+  font-size: 0.9rem;
+  text-decoration: none;
+  transition: border-color 0.3s, color 0.3s, background 0.3s;
+}
+.footer-sns a:hover {
+  border-color: var(--gold);
+  color: var(--gold);
+  background: rgba(212,168,83,0.05);
+}
+.footer-copy {
+  font-size: 0.65rem;
+  letter-spacing: 0.3em;
+  color: rgba(250,245,234,0.75);
+  text-shadow: 0 1px 6px rgba(34,54,41,0.7);
+}
+
+/* BACK TO TOP */
+.back-to-top {
+  position: fixed;
+  bottom: 2.5rem;
+  right: 2.5rem;
+  width: 48px; height: 48px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  background: rgba(26,46,31,0.85);
+  border: 1px solid rgba(212,168,83,0.35);
+  color: rgba(245,239,224,0.85);
+  cursor: pointer;
+  z-index: 90;
+  opacity: 0;
+  transform: translateY(12px);
+  transition: opacity 0.4s, transform 0.4s, border-color 0.3s, background 0.3s;
+  pointer-events: none;
+  backdrop-filter: blur(8px);
+}
+.back-to-top.visible {
+  opacity: 1;
+  transform: translateY(0);
+  pointer-events: auto;
+}
+.back-to-top:hover {
+  background: rgba(45,74,53,0.9);
+  border-color: rgba(212,168,83,0.75);
+}
+.back-to-top:hover .btt-arrow { transform: translateY(-2px); }
+.btt-arrow {
+  width: 10px; height: 10px;
+  border-top: 1px solid var(--gold);
+  border-right: 1px solid var(--gold);
+  transform: rotate(-45deg);
+  transition: transform 0.3s;
+  margin-top: 4px;
+}
+.btt-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.5rem;
+  letter-spacing: 0.15em;
+  color: rgba(212,168,83,0.8);
+  line-height: 1;
+}
+
+/* =============================================
+   component/_section.scss
+============================================= */
+section { position: relative; overflow: hidden; }
+
+.section-inner {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 0 2rem;
+}
+
+.section-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.5em;
+  color: var(--gold);
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 0.8rem;
+}
+
+.sec-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 3.8vw, 3rem);
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  line-height: 1;
+}
+.sec-title-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.8rem;
+  letter-spacing: 0.5em;
+  color: rgba(212,168,83,0.6);
+  display: block;
+  margin-top: 0.5rem;
+}
+.sec-header { margin-bottom: 4rem; }
+.sec-header.center { text-align: center; }
+
+/* サブページ共通セクション */
+.page-section {
+  position: relative;
+  padding: 7rem 0;
+  background: var(--forest-deep);
+}
+.page-section.tinted {
+  background:
+    radial-gradient(ellipse 48% 42% at 50% 0%, rgba(232,201,122,0.18) 0%, rgba(232,201,122,0.05) 52%, transparent 70%),
+    linear-gradient(180deg, var(--forest-deep) 0%, #1e3325 50%, var(--forest-deep) 100%);
+}
+.page-lead {
+  max-width: 680px;
+  margin: 0 auto 4.5rem;
+  text-align: center;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+  line-height: 2.4;
+  color: rgba(245,239,224,0.75);
+}
+
+/* スクロール連動フェードイン */
+.reveal {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal.visible { opacity: 1; transform: translateY(0); }
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-left.visible { opacity: 1; transform: translateX(0); }
+.reveal-right {
+  opacity: 0;
+  transform: translateX(30px);
+  transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.reveal-right.visible { opacity: 1; transform: translateX(0); }
+
+.delay-1 { transition-delay: 0.15s; }
+.delay-2 { transition-delay: 0.3s; }
+.delay-3 { transition-delay: 0.45s; }
+.delay-4 { transition-delay: 0.6s; }
+
+@media (max-width: 900px) {
+  .section-inner { padding: 0 1.4rem; }
+}
+
+/* =============================================
+   component/_button.scss
+============================================= */
+.hero-cta {
+  display: inline-block;
+  margin-top: 2.5rem;
+  padding: 0.8rem 2.8rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.45em;
+  color: rgba(245,239,224,0.88);
+  border: 1px solid rgba(212,168,83,0.4);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  opacity: 0;
+  animation: fade-up 1.2s ease 1.7s forwards;
+  transition: color 0.4s, border-color 0.4s;
+}
+.hero-cta::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(212,168,83,0.08);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.hero-cta:hover { border-color: var(--gold); color: var(--gold-pale); }
+.hero-cta:hover::before { transform: scaleX(1); }
+
+/* View more ボタン（常時表示版） */
+.btn-more {
+  display: inline-block;
+  padding: 0.8rem 2.8rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.82rem;
+  letter-spacing: 0.45em;
+  color: rgba(245,239,224,0.88);
+  border: 1px solid rgba(212,168,83,0.4);
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  transition: color 0.4s, border-color 0.4s;
+}
+.btn-more::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(212,168,83,0.08);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s ease;
+}
+.btn-more:hover { border-color: var(--gold); color: var(--gold-pale); }
+.btn-more:hover::before { transform: scaleX(1); }
+
+.section-more { text-align: center; margin-top: 3.5rem; }
+
+/* =============================================
+   component/_ui.scss（プリローダー・カーソル）
+============================================= */
+#preloader {
+  position: fixed;
+  inset: 0;
+  z-index: 10000;
+  background: var(--forest-deep);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  transition: opacity 0.9s ease, visibility 0.9s ease;
+}
+#preloader.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+.preloader-logo {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: 1.5rem;
+  letter-spacing: 0.45em;
+  color: var(--cream);
+  opacity: 0;
+  animation: fade-up 0.9s ease 0.2s forwards;
+}
+.preloader-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.72rem;
+  letter-spacing: 0.5em;
+  color: rgba(212,168,83,0.65);
+  margin-top: 0.4rem;
+  opacity: 0;
+  animation: fade-up 0.9s ease 0.5s forwards;
+}
+.preloader-bar {
+  width: 100px;
+  height: 1px;
+  background: rgba(212,168,83,0.2);
+  margin-top: 2rem;
+  overflow: hidden;
+}
+.preloader-fill {
+  height: 100%;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  width: 0;
+  animation: preloader-load 1.6s ease 0.3s forwards;
+}
+@keyframes preloader-load {
+  0%   { width: 0; }
+  100% { width: 100%; }
+}
+
+.cursor {
+  position: fixed;
+  width: 8px; height: 8px;
+  background: var(--gold);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform 0.1s, opacity 0.3s;
+  mix-blend-mode: screen;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(212,168,83,0.4);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: all 0.25s ease;
+}
+
+/* =============================================
+   component/_particles.scss（木漏れ日の演出）
+============================================= */
+.light-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,201,122,0.9) 0%, rgba(212,168,83,0.3) 50%, transparent 100%);
+  animation: float-particle linear infinite;
+  mix-blend-mode: screen;
+}
+@keyframes float-particle {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  50%  { transform: translateY(-40vh) translateX(var(--drift)) scale(1.2); opacity: 0.8; }
+  90%  { opacity: 0.3; }
+  100% { transform: translateY(-90vh) translateX(calc(var(--drift) * 1.5)) scale(0.5); opacity: 0; }
+}
+
+.light-rays {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+  overflow: hidden;
+}
+.ray {
+  position: absolute;
+  top: 0;
+  width: 2px;
+  height: 65%;
+  background: linear-gradient(180deg,
+    rgba(232,201,122,0.18) 0%,
+    rgba(212,168,83,0.10) 40%,
+    rgba(212,168,83,0.03) 75%,
+    transparent 100%);
+  filter: blur(3px);
+  animation: sway-ray ease-in-out infinite alternate;
+  transform-origin: top center;
+}
+@keyframes sway-ray {
+  0%   { transform: rotate(var(--angle-start)); opacity: 0.5; }
+  100% { transform: rotate(var(--angle-end));   opacity: 0.85; }
+}
+
+/* CONCEPT 浮遊粒子 */
+.cp-field { position: absolute; inset: 0; pointer-events: none; overflow: hidden; }
+.cp {
+  position: absolute;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(232,201,122,0.95) 0%, rgba(212,168,83,0.4) 50%, transparent 100%);
+  animation: cp-float linear infinite;
+  mix-blend-mode: screen;
+}
+@keyframes cp-float {
+  0%   { transform: translateY(0) translateX(0) scale(1); opacity: 0; }
+  10%  { opacity: 1; }
+  80%  { opacity: 0.6; }
+  100% { transform: translateY(-420px) translateX(var(--cp-drift)) scale(0.5); opacity: 0; }
+}
+
+/* =============================================
+   component/_page-hero.scss（下層ページ共通ヒーロー）
+============================================= */
+.page-hero {
+  position: relative;
+  height: 52vh;
+  min-height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+}
+.page-hero-bg {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+}
+.page-hero-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg,
+    rgba(34,54,41,0.6) 0%,
+    rgba(34,54,41,0.25) 50%,
+    rgba(34,54,41,0.9) 100%);
+}
+.page-hero-content {
+  position: relative;
+  z-index: 2;
+  padding: 0 1.5rem;
+}
+.page-hero-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.7rem;
+  letter-spacing: 0.5em;
+  color: var(--gold-pale);
+  margin-bottom: 1rem;
+  opacity: 0;
+  animation: fade-up 1s ease 0.2s forwards;
+}
+.page-hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2.4rem, 6vw, 4.2rem);
+  letter-spacing: 0.1em;
+  line-height: 1.1;
+  color: var(--cream);
+  opacity: 0;
+  animation: fade-up 1.1s ease 0.4s forwards;
+}
+.page-hero-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.8rem, 1.6vw, 1rem);
+  letter-spacing: 0.5em;
+  color: rgba(245,239,224,0.8);
+  margin-top: 0.8rem;
+  opacity: 0;
+  animation: fade-up 1.1s ease 0.6s forwards;
+}
+
+@media (max-width: 900px) {
+  .page-hero { height: 44vh; min-height: 320px; }
+}
+
+/* =============================================
+   component/_menu-card.scss
+============================================= */
+.menu-category { margin-bottom: 4rem; }
+.menu-category:last-child { margin-bottom: 0; }
+.menu-category-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.45em;
+  color: var(--gold);
+  text-transform: uppercase;
+  margin-bottom: 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+}
+.menu-category-label::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: rgba(212,168,83,0.2);
+}
+
+.menu-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5px;
+}
+.menu-grid.bakery {
+  grid-template-columns: repeat(2, 1fr);
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.menu-card {
+  position: relative;
+  padding: 2.2rem 2rem;
+  background: rgba(45,74,53,0.25);
+  border: 1px solid rgba(212,168,83,0.08);
+  transform: translateY(0);
+  transition: background 0.4s, border-color 0.4s, transform 0.4s;
+  cursor: default;
+}
+.menu-card:hover {
+  background: rgba(45,74,53,0.5);
+  border-color: rgba(212,168,83,0.25);
+  transform: translateY(-4px);
+}
+.menu-card:hover .menu-card-ornament { width: 100%; }
+.menu-card-img {
+  margin: -2.2rem -2rem 1.5rem;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+.menu-card-img img {
+  width: 100%; height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.menu-card:hover .menu-card-img img { transform: scale(1.04); }
+.menu-card-ornament {
+  position: absolute;
+  bottom: 0; left: 0;
+  height: 1px;
+  width: 0;
+  background: var(--gold);
+  transition: width 0.5s ease;
+}
+.menu-card-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 400;
+  font-size: clamp(1rem, 1.8vw, 1.25rem);
+  letter-spacing: 0.05em;
+  color: var(--cream);
+  margin-bottom: 0.6rem;
+}
+.menu-card-desc {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.72rem, 1.1vw, 0.82rem);
+  line-height: 1.8;
+  color: rgba(245,239,224,0.80);
+  margin-bottom: 1.2rem;
+}
+.menu-card-price {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.1rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-pale);
+}
+
+@media (max-width: 900px) {
+  .menu-grid { grid-template-columns: 1fr; }
+  .menu-grid.bakery { grid-template-columns: 1fr; max-width: 100%; }
+}
+
+/* =============================================
+   page/_front.scss（TOP＝LPの各セクション）
+============================================= */
+#hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 80% at 30% 40%, rgba(107,143,94,0.18) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 70% 60%, rgba(212,168,83,0.08) 0%, transparent 60%),
+    linear-gradient(180deg, rgba(26,46,31,0.32) 0%, rgba(26,46,31,0.05) 50%, rgba(26,46,31,0.55) 100%);
+  z-index: 1;
+}
+.hero-img-placeholder {
+  position: absolute;
+  inset: 0;
+  background-image: url('/kodama-coffee-wp/wp-content/themes/kodama-coffee/images/hero.jpg');
+  background-size: cover;
+  background-position: center;
+  transform: scale(1.05);
+  transition: transform 8s ease-out;
+}
+.hero-content {
+  position: relative;
+  z-index: 3;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+}
+.hero-label {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: clamp(0.65rem, 1.2vw, 0.8rem);
+  letter-spacing: 0.5em;
+  color: var(--gold-pale);
+  opacity: 0;
+  animation: fade-up 1.2s ease 0.3s forwards;
+  margin-bottom: 1.2rem;
+}
+.hero-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(3.5rem, 9vw, 8rem);
+  letter-spacing: 0.12em;
+  line-height: 1;
+  color: var(--cream);
+  opacity: 0;
+  animation: fade-up 1.4s ease 0.5s forwards;
+}
+.hero-title span { color: var(--gold); }
+.hero-sub {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.85rem, 1.8vw, 1.1rem);
+  letter-spacing: 0.6em;
+  color: rgba(245,239,224,0.85);
+  margin-top: 0.6rem;
+  opacity: 0;
+  animation: fade-up 1.4s ease 0.8s forwards;
+}
+.hero-divider {
+  width: 60px;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+  margin: 2rem auto;
+  opacity: 0;
+  animation: fade-in 1.2s ease 1.1s forwards;
+}
+.hero-catch {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.95rem, 2vw, 1.3rem);
+  letter-spacing: 0.3em;
+  color: rgba(245,239,224,0.88);
+  opacity: 0;
+  animation: fade-up 1.2s ease 1.2s forwards;
+}
+.scroll-hint {
+  position: absolute;
+  bottom: 2.5rem;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 3;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.6rem;
+  opacity: 0;
+  animation: fade-in 1.2s ease 2s forwards;
+}
+.scroll-hint span {
+  font-size: 0.65rem;
+  letter-spacing: 0.35em;
+  color: rgba(245,239,224,0.4);
+}
+.scroll-leaf {
+  width: 18px; height: 24px;
+  border: 1px solid rgba(212,168,83,0.4);
+  border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+  position: relative;
+  animation: leaf-float 2.4s ease-in-out infinite;
+}
+.scroll-leaf::after {
+  content: '';
+  position: absolute;
+  bottom: 4px; left: 50%;
+  transform: translateX(-50%);
+  width: 1px; height: 8px;
+  background: var(--gold);
+  opacity: 0.6;
+  animation: leaf-drop 2.4s ease-in-out infinite;
+}
+@keyframes leaf-float {
+  0%, 100% { transform: translateY(0); }
+  50%       { transform: translateY(6px); }
+}
+@keyframes leaf-drop {
+  0%, 100% { opacity: 0; transform: translateX(-50%) scaleY(0); transform-origin: top; }
+  40%, 60% { opacity: 0.7; transform: translateX(-50%) scaleY(1); }
+}
+
+/* CONCEPT セクション */
+#concept {
+  position: relative;
+  overflow: hidden;
+  padding: 9rem 0 8rem;
+  background:
+    radial-gradient(ellipse 30% 26% at 90%  8%,  rgba(232,201,122,0.26) 0%, rgba(232,201,122,0.08) 42%, transparent 62%),
+    radial-gradient(ellipse 65% 48% at 72%  2%,  rgba(217,181,90,0.14)  0%, transparent 65%),
+    radial-gradient(ellipse 45% 52% at 4%  92%,  rgba(107,143,94,0.22)  0%, transparent 55%),
+    var(--forest-deep);
+}
+#concept::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,168,83,0.3), transparent);
+}
+.concept-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+}
+.concept-img {
+  position: relative;
+  aspect-ratio: 4/5;
+  border-radius: 2px;
+  overflow: hidden;
+}
+.concept-img-inner {
+  width: 100%; height: 100%;
+  background-image: url('/kodama-coffee-wp/wp-content/themes/kodama-coffee/images/concept.jpg');
+  background-size: cover;
+  background-position: center;
+}
+.concept-img-frame {
+  position: absolute;
+  top: -12px; left: -12px;
+  right: 12px; bottom: -12px;
+  border: 1px solid rgba(212,168,83,0.2);
+  border-radius: 2px;
+  z-index: -1;
+}
+.concept-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.8rem;
+}
+.concept-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 4vw, 3.2rem);
+  line-height: 1.25;
+  color: var(--cream);
+}
+.concept-heading em {
+  font-style: italic;
+  color: var(--gold-pale);
+}
+.concept-body {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.85rem, 1.4vw, 0.95rem);
+  line-height: 2.2;
+  color: rgba(245,239,224,0.75);
+}
+.concept-ornament {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+.concept-ornament::before,
+.concept-ornament::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--gold), transparent);
+}
+.concept-ornament::after {
+  background: linear-gradient(270deg, var(--gold), transparent);
+}
+.concept-ornament span {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  color: var(--gold);
+}
+
+/* MENU セクション */
+#menu {
+  padding: 8rem 0;
+  background:
+    radial-gradient(ellipse 48% 42% at 50%  0%,  rgba(232,201,122,0.22) 0%, rgba(232,201,122,0.06) 52%, transparent 70%),
+    radial-gradient(ellipse 55% 42% at 82% 92%,  rgba(107,143,94,0.18)  0%, transparent 55%),
+    linear-gradient(180deg, var(--forest-deep) 0%, #1e3325 50%, var(--forest-deep) 100%);
+}
+.menu-header {
+  text-align: center;
+  margin-bottom: 5rem;
+}
+.menu-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2.4rem, 5vw, 4rem);
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  line-height: 1;
+}
+.menu-title-jp {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  letter-spacing: 0.5em;
+  color: rgba(212,168,83,0.7);
+  display: block;
+  margin-top: 0.6rem;
+}
+
+/* GALLERY セクション */
+#gallery {
+  padding: 8rem 0;
+  background: var(--forest-deep);
+}
+.gallery-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+.gallery-track-outer {
+  overflow: hidden;
+  width: 100%;
+  padding-left: max(2rem, calc((100vw - 1160px) / 2 + 2rem));
+}
+.gallery-track {
+  display: flex;
+  gap: 8px;
+  width: max-content;
+  animation: gallery-scroll 60s linear infinite;
+}
+.gallery-track:hover { animation-play-state: paused; }
+@keyframes gallery-scroll {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+.gallery-slide {
+  flex-shrink: 0;
+  width: 300px;
+  aspect-ratio: 2/3;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+.gallery-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.7s ease;
+}
+.gallery-slide:hover img { transform: scale(1.05); }
+.gallery-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(26,46,31,0);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.4s;
+}
+.gallery-slide:hover .gallery-overlay { background: rgba(26,46,31,0.45); }
+.gallery-overlay-text {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.35em;
+  color: var(--cream);
+  opacity: 0;
+  transition: opacity 0.4s 0.1s;
+}
+.gallery-slide:hover .gallery-overlay-text { opacity: 0.7; }
+
+/* STORY セクション */
+#story {
+  padding: 10rem 0;
+  background:
+    radial-gradient(ellipse 48% 42% at 98%  78%, rgba(107,143,94,0.18)  0%, transparent 52%),
+    linear-gradient(160deg, var(--forest-deep) 0%, #1e3325 100%);
+  position: relative;
+}
+.story-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.4fr;
+  gap: 6rem;
+  align-items: center;
+}
+.story-portrait {
+  position: relative;
+  z-index: 0;
+}
+.story-portrait-img {
+  aspect-ratio: 3/4;
+  border-radius: 1px;
+  overflow: hidden;
+}
+.story-portrait-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.story-portrait-deco {
+  position: absolute;
+  bottom: -16px; right: -16px;
+  width: 60%; height: 60%;
+  border: 1px solid rgba(212,168,83,0.15);
+  z-index: -1;
+}
+.story-text { display: flex; flex-direction: column; gap: 2rem; }
+.story-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  line-height: 1.3;
+  color: var(--cream);
+}
+.story-body {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.85rem, 1.3vw, 0.95rem);
+  line-height: 2.4;
+  color: rgba(245,239,224,0.72);
+}
+.story-sign {
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(212,168,83,0.15);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+.story-sign-role {
+  font-size: 0.72rem;
+  letter-spacing: 0.35em;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+}
+.story-sign-name {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 1rem;
+  letter-spacing: 0.2em;
+  color: rgba(245,239,224,0.85);
+}
+.story-sign-name-en {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: 0.85rem;
+  letter-spacing: 0.1em;
+  color: rgba(245,239,224,0.35);
+}
+
+/* ACCESS セクション */
+#access {
+  padding: 8rem 0;
+  background:
+    radial-gradient(ellipse 58% 38% at 58% 100%, rgba(232,201,122,0.24) 0%, rgba(232,201,122,0.08) 46%, transparent 66%),
+    var(--forest-deep);
+}
+#access::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,168,83,0.2), transparent);
+}
+.access-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.5fr;
+  gap: 5rem;
+  align-items: start;
+}
+.access-title {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 3.5vw, 2.8rem);
+  color: var(--cream);
+  margin-bottom: 3rem;
+  line-height: 1.2;
+}
+.access-info { display: flex; flex-direction: column; gap: 2rem; }
+.access-item-label {
+  font-size: 0.68rem;
+  letter-spacing: 0.4em;
+  color: var(--gold);
+  font-family: 'Cormorant Garamond', serif;
+  margin-bottom: 0.4rem;
+}
+.access-item-value {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.82rem, 1.3vw, 0.92rem);
+  line-height: 1.9;
+  color: rgba(245,239,224,0.75);
+}
+.map-area {
+  aspect-ratio: 4/3;
+  position: relative;
+  overflow: hidden;
+  border: 1px solid rgba(212,168,83,0.15);
+}
+.map-area iframe {
+  width: 100%;
+  height: 100%;
+  display: block;
+  border: 0;
+  filter: saturate(0.5) brightness(0.75) contrast(1.08);
+}
+.map-link {
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.75rem;
+  letter-spacing: 0.2em;
+  color: var(--gold);
+  text-decoration: none;
+  background: rgba(26,46,31,0.75);
+  backdrop-filter: blur(6px);
+  padding: 0.4rem 0.8rem;
+  border: 1px solid rgba(212,168,83,0.25);
+  transition: border-color 0.3s, color 0.3s;
+}
+.map-link:hover {
+  border-color: rgba(212,168,83,0.6);
+  color: var(--gold-pale);
+}
+
+/* NEWSダイジェスト（TOP） */
+#news-digest {
+  padding: 7rem 0;
+  background: var(--forest-deep);
+}
+#news-digest::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(212,168,83,0.2), transparent);
+}
+
+@media (max-width: 900px) {
+  .concept-grid,
+  .story-grid,
+  .access-grid { grid-template-columns: 1fr; gap: 3rem; }
+  .concept-img { max-width: 380px; }
+  .gallery-slide { width: 240px; }
+  .story-portrait { max-width: 280px; }
+}
+@media (max-width: 560px) {
+  .hero-title { font-size: clamp(2.8rem, 12vw, 4rem); }
+  #concept, #menu, #gallery, #story, #access { padding: 5rem 0; }
+  .footer-copy { font-size: 0.55rem; letter-spacing: 0.12em; }
+}
+
+/* =============================================
+   page/_concept.scss（コンセプトページ）
+============================================= */
+.feature-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 5rem;
+  align-items: center;
+  margin-bottom: 7rem;
+}
+.feature-row:last-child { margin-bottom: 0; }
+.feature-row.reverse .feature-img { order: 2; }
+.feature-img {
+  position: relative;
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+.feature-img img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.feature-text {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+.feature-heading {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(1.6rem, 3vw, 2.4rem);
+  line-height: 1.3;
+  color: var(--cream);
+}
+.feature-heading em {
+  font-style: italic;
+  color: var(--gold-pale);
+}
+.feature-body {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: clamp(0.85rem, 1.3vw, 0.92rem);
+  line-height: 2.3;
+  color: rgba(245,239,224,0.72);
+}
+
+.philosophy-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+}
+.philosophy-card {
+  padding: 3.2rem 2rem;
+  background: rgba(45,74,53,0.22);
+  border: 1px solid rgba(212,168,83,0.1);
+  text-align: center;
+  transition: border-color 0.4s, background 0.4s;
+}
+.philosophy-card:hover {
+  border-color: rgba(212,168,83,0.3);
+  background: rgba(45,74,53,0.4);
+}
+.philosophy-num {
+  font-family: 'Cormorant Garamond', serif;
+  font-style: italic;
+  font-weight: 300;
+  font-size: 2.2rem;
+  color: var(--gold);
+  line-height: 1;
+  margin-bottom: 1.2rem;
+}
+.philosophy-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 0.2em;
+  color: var(--cream);
+  margin-bottom: 1.2rem;
+}
+.philosophy-text {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.82rem;
+  line-height: 2.2;
+  color: rgba(245,239,224,0.7);
+  text-align: left;
+}
+
+@media (max-width: 900px) {
+  .feature-row { grid-template-columns: 1fr; gap: 2.5rem; margin-bottom: 5rem; }
+  .feature-row.reverse .feature-img { order: 0; }
+  .philosophy-grid { grid-template-columns: 1fr; }
+}
+
+/* =============================================
+   page/_story.scss（ストーリーページ）
+============================================= */
+.timeline {
+  position: relative;
+  max-width: 680px;
+  margin: 0 auto;
+  padding-left: 2.8rem;
+}
+.timeline::before {
+  content: '';
+  position: absolute;
+  top: 6px; bottom: 6px; left: 8px;
+  width: 1px;
+  background: linear-gradient(180deg, rgba(212,168,83,0.5), rgba(212,168,83,0.08));
+}
+.timeline-item {
+  position: relative;
+  padding-bottom: 3.5rem;
+}
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before {
+  content: '';
+  position: absolute;
+  top: 8px;
+  left: -2.8rem;
+  margin-left: 4.5px;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: var(--gold);
+  box-shadow: 0 0 12px rgba(217,181,90,0.6);
+}
+.timeline-year {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.95rem;
+  letter-spacing: 0.25em;
+  color: var(--gold-pale);
+  margin-bottom: 0.5rem;
+}
+.timeline-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 0.12em;
+  color: var(--cream);
+  margin-bottom: 0.8rem;
+}
+.timeline-text {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.85rem;
+  line-height: 2.2;
+  color: rgba(245,239,224,0.7);
+}
+
+/* =============================================
+   page/_interior.scss（店内紹介ページ）
+============================================= */
+.interior-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+.interior-grid figure {
+  position: relative;
+  aspect-ratio: 1/1;
+  overflow: hidden;
+  margin: 0;
+  cursor: pointer;
+}
+.interior-grid img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.7s ease;
+}
+.interior-grid figure:hover img { transform: scale(1.06); }
+.interior-grid figcaption {
+  position: absolute;
+  left: 0; right: 0; bottom: 0;
+  padding: 2.2rem 1.2rem 1rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.3em;
+  color: var(--cream);
+  background: linear-gradient(180deg, transparent, rgba(26,46,31,0.8));
+  opacity: 0;
+  transition: opacity 0.4s;
+}
+.interior-grid figure:hover figcaption { opacity: 1; }
+
+@media (max-width: 900px) {
+  .interior-grid { grid-template-columns: repeat(2, 1fr); }
+}
+
+/* =============================================
+   page/_news.scss（お知らせ 一覧・詳細）
+============================================= */
+.news-list {
+  max-width: 800px;
+  margin: 0 auto;
+}
+.news-item {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 2rem;
+  align-items: start;
+  padding: 2.2rem 0;
+  border-bottom: 1px solid rgba(212,168,83,0.12);
+}
+.news-item:first-child { border-top: 1px solid rgba(212,168,83,0.12); }
+.news-thumb {
+  aspect-ratio: 4/3;
+  overflow: hidden;
+}
+.news-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s ease;
+}
+.news-item:hover .news-thumb img { transform: scale(1.04); }
+.news-meta {
+  display: flex;
+  align-items: center;
+  gap: 1.2rem;
+  margin-bottom: 0.6rem;
+}
+.news-date {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.8rem;
+  letter-spacing: 0.15em;
+  color: var(--gold-pale);
+}
+.news-cat {
+  font-size: 0.65rem;
+  letter-spacing: 0.2em;
+  color: rgba(245,239,224,0.6);
+  border: 1px solid rgba(212,168,83,0.25);
+  padding: 0.15rem 0.7rem;
+}
+.news-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: clamp(0.95rem, 1.6vw, 1.1rem);
+  letter-spacing: 0.08em;
+  line-height: 1.7;
+}
+.news-title a {
+  color: var(--cream);
+  text-decoration: none;
+  transition: color 0.3s;
+}
+.news-title a:hover { color: var(--gold-pale); }
+.news-excerpt {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.82rem;
+  line-height: 2;
+  color: rgba(245,239,224,0.65);
+  margin-top: 0.5rem;
+}
+.news-none {
+  text-align: center;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  color: rgba(245,239,224,0.6);
+}
+
+/* ページネーション */
+.pagination { margin-top: 4rem; text-align: center; }
+.pagination .page-numbers {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 40px;
+  height: 40px;
+  margin: 0 0.3rem;
+  padding: 0 0.6rem;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.9rem;
+  color: rgba(245,239,224,0.7);
+  border: 1px solid rgba(212,168,83,0.2);
+  text-decoration: none;
+  transition: border-color 0.3s, color 0.3s;
+}
+.pagination .page-numbers.current {
+  color: var(--gold);
+  border-color: var(--gold);
+}
+.pagination .page-numbers:hover {
+  border-color: rgba(212,168,83,0.6);
+  color: var(--gold-pale);
+}
+
+/* 詳細（single） */
+.entry {
+  max-width: 760px;
+  margin: 0 auto;
+}
+.entry-header {
+  margin-bottom: 3rem;
+  padding-bottom: 2rem;
+  border-bottom: 1px solid rgba(212,168,83,0.15);
+}
+.entry-title {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: clamp(1.3rem, 2.6vw, 1.8rem);
+  line-height: 1.8;
+  letter-spacing: 0.08em;
+  color: var(--cream);
+  margin-top: 0.8rem;
+}
+.entry-thumb { margin-bottom: 3rem; }
+.entry-content {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 200;
+  font-size: 0.92rem;
+  line-height: 2.3;
+  color: rgba(245,239,224,0.78);
+}
+.entry-content p { margin-bottom: 1.8em; }
+.entry-content h2 {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 1.25rem;
+  letter-spacing: 0.1em;
+  color: var(--cream);
+  margin: 2.5em 0 1em;
+  padding-left: 1rem;
+  border-left: 2px solid var(--gold);
+}
+.entry-content h3 {
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 1.05rem;
+  letter-spacing: 0.1em;
+  color: var(--gold-pale);
+  margin: 2em 0 0.8em;
+}
+.entry-content img { margin: 2em 0; }
+.entry-content a { color: var(--gold-pale); }
+.entry-footer {
+  margin-top: 4rem;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .news-item { grid-template-columns: 1fr; gap: 1rem; }
+  .news-thumb { max-width: 420px; }
+}
+
+/* =============================================
+   page/_contact.scss（コンタクト・CF7対応）
+============================================= */
+.contact-wrap {
+  max-width: 680px;
+  margin: 0 auto;
+}
+.contact-form p { margin-bottom: 1.8rem; }
+.contact-form label {
+  display: block;
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 0.85rem;
+  letter-spacing: 0.15em;
+  color: rgba(245,239,224,0.85);
+  margin-bottom: 0.6rem;
+}
+.contact-form .required {
+  color: var(--gold);
+  font-size: 0.7rem;
+  margin-left: 0.5rem;
+  letter-spacing: 0.1em;
+}
+.contact-form input[type="text"],
+.contact-form input[type="email"],
+.contact-form input[type="tel"],
+.contact-form textarea,
+.contact-form select {
+  width: 100%;
+  padding: 0.9rem 1rem;
+  background: rgba(45,74,53,0.3);
+  border: 1px solid rgba(212,168,83,0.18);
+  border-radius: 0;
+  color: var(--cream);
+  font-family: 'Noto Serif JP', serif;
+  font-weight: 300;
+  font-size: 0.9rem;
+  letter-spacing: 0.05em;
+  appearance: none;
+  transition: border-color 0.3s, background 0.3s;
+}
+.contact-form input[type="text"]:focus,
+.contact-form input[type="email"]:focus,
+.contact-form input[type="tel"]:focus,
+.contact-form textarea:focus,
+.contact-form select:focus {
+  outline: none;
+  border-color: rgba(212,168,83,0.6);
+  background: rgba(45,74,53,0.5);
+}
+.contact-form ::placeholder { color: rgba(245,239,224,0.3); }
+.contact-form textarea {
+  min-height: 180px;
+  resize: vertical;
+}
+.contact-submit {
+  text-align: center;
+  margin-top: 3rem;
+}
+.contact-form input[type="submit"] {
+  display: inline-block;
+  padding: 1rem 4rem;
+  background: transparent;
+  border: 1px solid rgba(212,168,83,0.5);
+  border-radius: 0;
+  color: var(--cream);
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 0.85rem;
+  letter-spacing: 0.4em;
+  cursor: pointer;
+  transition: background 0.4s, border-color 0.4s, color 0.4s;
+}
+.contact-form input[type="submit"]:hover {
+  background: rgba(212,168,83,0.12);
+  border-color: var(--gold);
+  color: var(--gold-pale);
+}
+
+/* Contact Form 7 標準パーツ */
+.wpcf7-spinner { display: block; margin: 0.8rem auto 0; }
+.wpcf7-not-valid-tip {
+  color: #E8A87C;
+  font-size: 0.75rem;
+  margin-top: 0.4rem;
+}
+.wpcf7 form .wpcf7-response-output {
+  margin: 2.5rem 0 0;
+  padding: 1rem 1.5rem;
+  border: 1px solid rgba(212,168,83,0.4);
+  color: var(--cream);
+  font-family: 'Noto Serif JP', serif;
+  font-size: 0.85rem;
+}
